@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team868.robot.commands.drive.DriveTank;
+
+import org.usfirst.frc.team868.robot.commands.drive.DriveArcadeVolts;
 import org.usfirst.frc.team868.robot.commands.drive.RampVoltsDrive;
 import org.usfirst.frc.team868.robot.subsystems.*;
 
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
 	// Global subsystems that all commands have access to
 	//
 	public static final DriveSubsystem kDrive = new DriveSubsystem();
+	public static final TransmissionSubsystem kTransmission = new TransmissionSubsystem();
 	public static final GyroSubsystem kGyro = new GyroSubsystem();
 	public static final CatcherSubsystem kCatcher = new CatcherSubsystem();
 	public static final CollectorSubsystem kIntake = new CollectorSubsystem();
@@ -49,7 +51,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		kDrive.setDefaultCommand(new DriveTank());
+		kDrive.setDefaultCommand(new DriveArcadeVolts());
 
 		m_chooser.addDefault("Do Nothing", new WaitCommand(1.0));
 		m_chooser.addObject("Slow Punch", RampVoltsDrive.createPunchSequence(4.0, 3.0, 1.0));

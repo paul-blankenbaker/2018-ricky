@@ -13,8 +13,12 @@ import org.usfirst.frc.team868.robot.commands.catcher.PushCube;
 import org.usfirst.frc.team868.robot.commands.collector.GrabCube;
 import org.usfirst.frc.team868.robot.commands.collector.SuckInCube;
 import org.usfirst.frc.team868.robot.commands.collector.ThrowCube;
+import org.usfirst.frc.team868.robot.commands.transmission.AutoShift;
+import org.usfirst.frc.team868.robot.commands.transmission.ShiftGears;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,13 +26,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI {
-	private Joystick stick;
+public final class OI {
+	// Percent movement of axis that needs to be exceeded to be considered off zero.
+	private static final double kDeadZone = 0.05;
+	private XboxController m_driver;
 
 	public OI() {
-		stick = new Joystick(0);
+		m_driver = new XboxController(0);
 		
 		setupSmartDashboard();
+		setupDriver();
+	}
+	
+	private void setupDriver() {
+		// For manual shifting, only drop to low gear while button is pressed down
+		Button manualShift = new JoystickButton(m_driver, 6);
+		manualShift.whenPressed(new ShiftGears(false, false));
+		manualShift.whenReleased(new ShiftGears(true, false));
+
+		// Toggle auto shifting (note, driver may need to press/release manual shifting to get back to high gear)
+		Button autoShift = new JoystickButton(m_driver, 7);
+		autoShift.toggleWhenPressed(new AutoShift());	
 	}
 	
 	private void setupSmartDashboard() {
@@ -48,9 +66,45 @@ public class OI {
 		SmartDashboard.putData("Close Catcher", new CloseArm());
 		SmartDashboard.putData("Push Catchar", new PushCube());
 	}
+	
+	public static double checkDeadZone(double raw) {
+		double mag = Math.abs(raw);
+		if (mag < kDeadZone) {
+			return 0.0;
+		}
+		// Take out dead zone hole and return value in range of [-1.0, +1.0]
+		if (raw < 0) {
+			raw += kDeadZone;
+			raw /= (1.0 - kDeadZone);
+		} else {
+			raw -= kDeadZone;
+			raw /= (1.0 - kDeadZone);
+		}
+		return raw;
+	}
+	
+	/**
+	 * Get throttle for driving in arcade mode.
+	 * 
+	 * @return Throttle value based on stick Y axis (value in range of [-1.0, +1.0].
+	 */
+	public double getThrottle() {
+		double axis = m_driver.getRawAxis(5);
+		return checkDeadZone(-axis);
+	}
+	
+	/**
+	 * Get turn value for driving in arcade mode.
+	 * 
+	 * @return How much to turn based on stick X axis (value in range of [-1.0, +1.0].
+	 */
+	public double getSteer() {
+		double axis = m_driver.getRawAxis(2);
+		return checkDeadZone(axis);
+	}
 
 	public double getTankRight() {
-		double rightStick = -stick.getRawAxis(5);
+		double rightStick = -m_driver.getRawAxis(5);
 		rightStick *= 5;
 		if(rightStick < 0) {
 			rightStick = Math.ceil(rightStick);
@@ -61,7 +115,7 @@ public class OI {
 		return rightStick;
 	}
 	public double getTankLeft() {
-		double leftStick = -stick.getRawAxis(1);
+		double leftStick = -m_driver.getRawAxis(1);
 		leftStick *= 5;
 		leftStick = Math.floor(leftStick);
 		leftStick /= 5;

@@ -29,4 +29,11 @@ public final class RobotMap {
 		public static final int kDriveRightChA = 3;
 		public static final int kDriveRightChB = 4;
 	}
+	
+	/**
+	 * PCM solenoid usage.
+	 */
+	public class PCM {
+		public static final int kDriveShifter = 0;
+	}
 }

@@ -7,9 +7,11 @@
 
 package org.usfirst.frc.team868.robot.subsystems;
 
+import org.usfirst.frc.team868.robot.Robot;
 import org.usfirst.frc.team868.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,10 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * train.
  */
 public final class DriveSubsystem extends Subsystem {
-	private Spark rightM;
-	private Spark leftM;
-	private Encoder rightE;
-	private Encoder leftE;
+	private final Spark rightM;
+	private final Spark leftM;
+	private final Encoder rightE;
+	private final Encoder leftE;
 
 	// Set to true to enable more dashboard output
 	private static final boolean kDebug = true;
@@ -38,16 +40,15 @@ public final class DriveSubsystem extends Subsystem {
 	public DriveSubsystem() {
 		super("Drive");
 
+		// Initialize motor controllers
 		leftM = new Spark(RobotMap.PWM.kDriveLeftMotors);
 		rightM = new Spark(RobotMap.PWM.kDriveRightMotors);
-
-		// TODO: Need encoder ports
-		leftE = createEncoder("Left", RobotMap.DIO.kDriveLeftChA, RobotMap.DIO.kDriveLeftChB, false);
-		rightE = createEncoder("Right", RobotMap.DIO.kDriveRightChA, RobotMap.DIO.kDriveRightChB, false);
-
-		// Let's group things in test mode
 		leftM.setName("Drive", "LeftMotor");
 		rightM.setName("Drive", "RightMotor");
+
+		// Initialize encoders
+		leftE = createEncoder("Left", RobotMap.DIO.kDriveLeftChA, RobotMap.DIO.kDriveLeftChB, false);
+		rightE = createEncoder("Right", RobotMap.DIO.kDriveRightChA, RobotMap.DIO.kDriveRightChB, false);
 
 		if (kDebug) {
 			// When debugging enabled, put subsystem to dashboard to
@@ -102,8 +103,26 @@ public final class DriveSubsystem extends Subsystem {
 	 */
 	public void setPower(double left, double right) {
 		right = -right;
+		left = Math.max(-1.0, Math.min(1.0, left));
+		right = Math.max(-1.0, Math.min(1.0, right));
 		leftM.set(left);
 		rightM.set(right);
+	}
+
+	/**
+	 * Set power on left and right side.
+	 * 
+	 * @param left
+	 *            Power setting for left side in volts (range of [-7.0, +7.0] should
+	 *            always be safe), but you can request as much as you want.
+	 * @param right
+	 *            Power setting for right side in volts.
+	 */
+	public void setVolts(double leftVolts, double rightVolts) {
+		double batteryVolts = RobotController.getInputVoltage();
+		double left = leftVolts / batteryVolts;
+		double right = rightVolts / batteryVolts;
+		Robot.kDrive.setPower(left, right);
 	}
 
 	/**
@@ -187,8 +206,7 @@ public final class DriveSubsystem extends Subsystem {
 	 * @return Distance in inches.
 	 */
 	public double getDistanceRight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return rightE.getDistance();
 	}
 
 }
