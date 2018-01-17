@@ -81,7 +81,13 @@ public class Robot extends TimedRobot {
 	private void commonPeriodic() {
 		kGyro.updateDashboard();
 		kDrive.updateDashboard();
-		kIntake.updateDashboard();
+		kTransmission.updateDashboard();
+		
+		SmartDashboard.putNumber("Total Current", kPDP.getTotalCurrent());
+		
+		if (CollectorPrototypeSubsystem.isConnected()) {
+			kIntake.updateDashboard();
+		}
 	}
 
 	/**
