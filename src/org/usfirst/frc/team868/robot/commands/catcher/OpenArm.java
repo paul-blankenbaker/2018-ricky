@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team868.robot.commands;
+package org.usfirst.frc.team868.robot.commands.catcher;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team868.robot.Robot;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team868.robot.Robot;
 public class OpenArm extends Command {
 	public OpenArm() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.catcherNew);
+		requires(Robot.kCatcher);
 	}
 
 	// Called just before this Command runs the first time
@@ -27,7 +27,7 @@ public class OpenArm extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.catcherNew.open();
+		Robot.kCatcher.open();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

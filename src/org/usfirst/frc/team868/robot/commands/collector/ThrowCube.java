@@ -5,18 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team868.robot.commands;
+package org.usfirst.frc.team868.robot.commands.collector;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team868.robot.Robot;
 
 /**
- * An example command.  You can replace me with your own command.
+ * Throws cube out by spinning wheels out.
  */
-public class PushCube extends Command {
-	public PushCube() {
+public class ThrowCube extends Command {
+	public ThrowCube() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.catcherNew);
+		requires(Robot.kIntake);
 	}
 
 	// Called just before this Command runs the first time
@@ -27,18 +27,20 @@ public class PushCube extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.catcherNew.push();
+		Robot.kIntake.spinOut();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
+		// Skip current check on throwing out
 		return false;
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+		Robot.kIntake.spinOut();
 	}
 
 	// Called when another command which requires one or more of the same

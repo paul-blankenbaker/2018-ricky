@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -993,6 +992,7 @@ public class BNO055 {
 	/**
 	 * Removes the SmartDashboard diagnostics from the network tables.
 	 */
+	/*
 	public void clearDashboard() {
 		NetworkTable sd = NetworkTable.getTable("SmartDashboard");
 
@@ -1011,6 +1011,7 @@ public class BNO055 {
 		sd.delete("BNO055 Read Max");
 		sd.delete("BNO055 Read Over");
 	}
+	*/
 
 	/**
 	 * Writes an 8 bit value over I2C

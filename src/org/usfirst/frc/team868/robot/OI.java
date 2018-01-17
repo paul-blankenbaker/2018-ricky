@@ -7,12 +7,12 @@
 
 package org.usfirst.frc.team868.robot;
 
-import org.usfirst.frc.team868.robot.commands.CloseArm;
-import org.usfirst.frc.team868.robot.commands.GrabCube;
-import org.usfirst.frc.team868.robot.commands.OpenArm;
-import org.usfirst.frc.team868.robot.commands.PushCube;
-import org.usfirst.frc.team868.robot.commands.SuckInCube;
-import org.usfirst.frc.team868.robot.commands.ThrowCube;
+import org.usfirst.frc.team868.robot.commands.catcher.CloseArm;
+import org.usfirst.frc.team868.robot.commands.catcher.OpenArm;
+import org.usfirst.frc.team868.robot.commands.catcher.PushCube;
+import org.usfirst.frc.team868.robot.commands.collector.GrabCube;
+import org.usfirst.frc.team868.robot.commands.collector.SuckInCube;
+import org.usfirst.frc.team868.robot.commands.collector.ThrowCube;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.CommandGroup;

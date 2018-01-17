@@ -7,16 +7,15 @@
 
 package org.usfirst.frc.team868.robot;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import lib.util.gyro.BNO055;
-
-import org.usfirst.frc.team868.robot.commands.*;
+import org.usfirst.frc.team868.robot.commands.drive.DriveTank;
+import org.usfirst.frc.team868.robot.commands.drive.RampVoltsDrive;
 import org.usfirst.frc.team868.robot.subsystems.*;
 
 /**
@@ -27,15 +26,21 @@ import org.usfirst.frc.team868.robot.subsystems.*;
  * project.
  */
 public class Robot extends TimedRobot {
+	//
+	// Global subsystems that all commands have access to
+	//
 	public static final DriveSubsystem kDrive = new DriveSubsystem();
-	public static final BNO055 kGyro = BNO055.getInstance(I2C.Port.kOnboard);
-	public static OI m_oi;
-	
-	public static final Catcher catcherNew = new Catcher();
-	public static final IntakeOutput kIntake = new IntakeOutput();
+	public static final GyroSubsystem kGyro = new GyroSubsystem();
+	public static final CatcherSubsystem kCatcher = new CatcherSubsystem();
+	public static final CollectorSubsystem kIntake = new CollectorSubsystem();
 	public static final PowerDistributionPanel kPDP = new PowerDistributionPanel();
 
-	Command m_autonomousCommand;
+	//
+	// Single instance of OI object (must be constructed AFTER subsystems).
+	//
+	public static final OI kOI = new OI();
+
+	// Used to select auton mode
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 	/**
@@ -44,11 +49,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_oi = new OI();
 		kDrive.setDefaultCommand(new DriveTank());
-		m_chooser.addDefault("Drive straight 5", new TimeDrive(.3, .3, 5));
-		m_chooser.addObject("Turn left 5", new TimeDrive(.5, .3, 5));
-		m_chooser.addObject("Spin right 2", new TimeDrive(-.4, .4, 2));
+
+		m_chooser.addDefault("Do Nothing", new WaitCommand(1.0));
 		m_chooser.addObject("Slow Punch", RampVoltsDrive.createPunchSequence(4.0, 3.0, 1.0));
 		m_chooser.addObject("Rabbit Punch", RampVoltsDrive.createPunchSequence(6.0, 1.0, 0.0));
 		SmartDashboard.putData("Auto mode", m_chooser);
@@ -74,7 +77,7 @@ public class Robot extends TimedRobot {
 	 * Common things to do by the auton, teleop and disabled periodic methods.
 	 */
 	private void commonPeriodic() {
-		SmartDashboard.putNumber("Gyro", Robot.kGyro.getHeading());
+		kGyro.updateDashboard();
 		kDrive.updateDashboard();
 		kIntake.updateDashboard();
 	}
@@ -93,18 +96,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-		 * switch(autoSelected) { case "My Auto": autonomousCommand = new
-		 * MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new
-		 * ExampleCommand(); break; }
-		 */
+		Scheduler.getInstance().removeAll();
+		Command auton = m_chooser.getSelected();
 
 		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
+		if (auton != null) {
+			auton.start();
 		}
 	}
 
@@ -119,13 +116,14 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		Scheduler.getInstance().removeAll();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
-		}
+		//if (m_autonomousCommand != null) {
+		//	m_autonomousCommand.cancel();
+		//}
 	}
 
 	/**

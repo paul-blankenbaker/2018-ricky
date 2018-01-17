@@ -40,7 +40,6 @@ import java.io.PrintStream;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -428,6 +427,7 @@ public final class ITG3200 {
 	 *            Short name like "Gyro" to prefix each label with on the
 	 *            dashboard (what you passed to {@link #updateDashboard}.
 	 */
+	/*
 	public void clearDashboard(String tag) {
 		NetworkTable sd = NetworkTable.getTable("SmartDashboard");
 		
@@ -445,6 +445,7 @@ public final class ITG3200 {
 
 		sd.delete(tag + " I2C Address");
 	}
+	*/
 
 	/**
 	 * Internal method that runs in the background thread to accumulate data

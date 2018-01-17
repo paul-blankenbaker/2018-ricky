@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class IntakeOutput extends Subsystem {
+public class CollectorSubsystem extends Subsystem {
 	
 	private static final int kLeftPWM = 5;
 	private static final int kLeftPDP = 4;
@@ -22,7 +22,7 @@ public class IntakeOutput extends Subsystem {
 	private Spark spinRight;
 	private double maxSpinCurrent;
 
-	public IntakeOutput() {
+	public CollectorSubsystem() {
 		catchBar = new Solenoid(5);
 
 		spinLeft = new Spark(kLeftPWM);

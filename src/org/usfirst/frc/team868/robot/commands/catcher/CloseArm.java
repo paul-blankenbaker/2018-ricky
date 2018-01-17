@@ -5,18 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team868.robot.commands;
+package org.usfirst.frc.team868.robot.commands.catcher;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team868.robot.Robot;
 
 /**
- * Releases cube by opening arms.
+ * An example command.  You can replace me with your own command.
  */
-public class ReleaseCube extends Command {
-	public ReleaseCube() {
+public class CloseArm extends Command {
+	public CloseArm() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.kIntake);
+		requires(Robot.kCatcher);
 	}
 
 	// Called just before this Command runs the first time
@@ -27,7 +27,7 @@ public class ReleaseCube extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.kIntake.open();
+		Robot.kCatcher.close();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

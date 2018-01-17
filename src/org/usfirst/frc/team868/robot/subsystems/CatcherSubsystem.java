@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.Solenoid;
 /**
  *
  */
-public class Catcher extends Subsystem {
+public class CatcherSubsystem extends Subsystem {
 	private Solenoid catchBar;
 	private Solenoid puncher;
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	public Catcher() {
+	public CatcherSubsystem() {
 		catchBar = new Solenoid(5);
 		puncher = new Solenoid(7);
 	}

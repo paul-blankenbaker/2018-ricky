@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team868.robot.commands;
+package org.usfirst.frc.team868.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team868.robot.Robot;
@@ -13,15 +13,9 @@ import org.usfirst.frc.team868.robot.Robot;
 /**
  * An example command.  You can replace me with your own command.
  */
-public class TimeDrive extends Command {
-	private double left;
-	private double right;
-	private double time;
-	public TimeDrive(double left, double right, double time) {
+public class DriveTank extends Command {
+	public DriveTank() {
 		// Use requires() here to declare subsystem dependencies
-		this.left = left;
-		this.right = right;
-		this.time = time;
 		requires(Robot.kDrive);
 	}
 
@@ -33,14 +27,15 @@ public class TimeDrive extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+		double left = Robot.kOI.getTankLeft();
+		double right = Robot.kOI.getTankRight();
 		Robot.kDrive.setPower(left, right);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		Boolean done = timeSinceInitialized() >= time;
-		return done;
+		return false;
 	}
 
 	// Called once after isFinished returns true
