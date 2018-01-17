@@ -33,8 +33,8 @@ public class Robot extends TimedRobot {
 	public static final DriveSubsystem kDrive = new DriveSubsystem();
 	public static final TransmissionSubsystem kTransmission = new TransmissionSubsystem();
 	public static final GyroSubsystem kGyro = new GyroSubsystem();
-	public static final CatcherSubsystem kCatcher = new CatcherSubsystem();
-	public static final CollectorSubsystem kIntake = new CollectorSubsystem();
+	public static final CatcherPrototypeSubsystem kCatcher = new CatcherPrototypeSubsystem();
+	public static final CollectorPrototypeSubsystem kIntake = new CollectorPrototypeSubsystem();
 	public static final PowerDistributionPanel kPDP = new PowerDistributionPanel();
 
 	//

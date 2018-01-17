@@ -35,5 +35,14 @@ public final class RobotMap {
 	 */
 	public class PCM {
 		public static final int kDriveShifter = 0;
+		
+		// NOTE: Catcher is wooden prototype that squeeze and punches
+		// (can not coexist with Collector)
+		public static final int kCatcherGrabber = 5;
+		public static final int kCatcherPuncher = 7;
+
+		// NOTE: Collector is wheeled collector that can squeeze
+		// (can not coexist with Catcher)
+		public static final int kCollectorGrabber = 5;
 	}
 }

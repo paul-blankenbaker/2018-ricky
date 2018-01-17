@@ -15,6 +15,7 @@ import org.usfirst.frc.team868.robot.commands.collector.SuckInCube;
 import org.usfirst.frc.team868.robot.commands.collector.ThrowCube;
 import org.usfirst.frc.team868.robot.commands.transmission.AutoShift;
 import org.usfirst.frc.team868.robot.commands.transmission.ShiftGears;
+import org.usfirst.frc.team868.robot.subsystems.CollectorPrototypeSubsystem;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -33,40 +34,45 @@ public final class OI {
 
 	public OI() {
 		m_driver = new XboxController(0);
-		
+
 		setupSmartDashboard();
 		setupDriver();
 	}
-	
+
 	private void setupDriver() {
 		// For manual shifting, only drop to low gear while button is pressed down
 		Button manualShift = new JoystickButton(m_driver, 6);
 		manualShift.whenPressed(new ShiftGears(false, false));
 		manualShift.whenReleased(new ShiftGears(true, false));
 
-		// Toggle auto shifting (note, driver may need to press/release manual shifting to get back to high gear)
+		// Toggle auto shifting (note, driver may need to press/release manual shifting
+		// to get back to high gear)
 		Button autoShift = new JoystickButton(m_driver, 7);
-		autoShift.toggleWhenPressed(new AutoShift());	
+		autoShift.toggleWhenPressed(new AutoShift());
 	}
-	
-	private void setupSmartDashboard() {
-		// IntakeOutput commands
-		SmartDashboard.putData("Close Arms", new GrabCube());
-		SmartDashboard.putData("Open Arms", new OpenArm());
-		SmartDashboard.putData("Spin In", new SuckInCube());
-		SmartDashboard.putData("Spin Out", new ThrowCube());
 
-		CommandGroup collect = new CommandGroup("Collect");
-		collect.addParallel(new OpenArm());
-		collect.addParallel(new SuckInCube());
-		SmartDashboard.putData("Collect", collect);
-		
-		// Add Jimmy commands
-		SmartDashboard.putData("Open Catcher", new OpenArm());
-		SmartDashboard.putData("Close Catcher", new CloseArm());
-		SmartDashboard.putData("Push Catchar", new PushCube());
+	private void setupSmartDashboard() {
+		// Collector prototype commands (not always connected to robot)
+		if (CollectorPrototypeSubsystem.isConnected()) {
+			SmartDashboard.putData("Close Arms", new GrabCube());
+			SmartDashboard.putData("Open Arms", new OpenArm());
+			SmartDashboard.putData("Spin In", new SuckInCube());
+			SmartDashboard.putData("Spin Out", new ThrowCube());
+
+			CommandGroup collect = new CommandGroup("Collect");
+			collect.addParallel(new OpenArm());
+			collect.addParallel(new SuckInCube());
+			SmartDashboard.putData("Collect", collect);
+		}
+
+		// Catcher prototype commands (not always connected to robot)
+		if (CollectorPrototypeSubsystem.isConnected()) {
+			SmartDashboard.putData("Open Catcher", new OpenArm());
+			SmartDashboard.putData("Close Catcher", new CloseArm());
+			SmartDashboard.putData("Push Catchar", new PushCube());
+		}
 	}
-	
+
 	public static double checkDeadZone(double raw) {
 		double mag = Math.abs(raw);
 		if (mag < kDeadZone) {
@@ -82,7 +88,7 @@ public final class OI {
 		}
 		return raw;
 	}
-	
+
 	/**
 	 * Get throttle for driving in arcade mode.
 	 * 
@@ -92,11 +98,12 @@ public final class OI {
 		double axis = m_driver.getRawAxis(5);
 		return checkDeadZone(-axis);
 	}
-	
+
 	/**
 	 * Get turn value for driving in arcade mode.
 	 * 
-	 * @return How much to turn based on stick X axis (value in range of [-1.0, +1.0].
+	 * @return How much to turn based on stick X axis (value in range of [-1.0,
+	 *         +1.0].
 	 */
 	public double getSteer() {
 		double axis = m_driver.getRawAxis(2);
@@ -106,7 +113,7 @@ public final class OI {
 	public double getTankRight() {
 		double rightStick = -m_driver.getRawAxis(5);
 		rightStick *= 5;
-		if(rightStick < 0) {
+		if (rightStick < 0) {
 			rightStick = Math.ceil(rightStick);
 		} else {
 			rightStick = Math.floor(rightStick);
@@ -114,6 +121,7 @@ public final class OI {
 		rightStick /= 5;
 		return rightStick;
 	}
+
 	public double getTankLeft() {
 		double leftStick = -m_driver.getRawAxis(1);
 		leftStick *= 5;
